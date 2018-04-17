@@ -5,11 +5,11 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
-import me.kamili.rachid.firebaseauth.utils.FacebookManager;
+import me.kamili.rachid.firebaseauth.utils.AuthManager;
 
-public class SecondActivity extends AppCompatActivity implements FacebookManager.ISignOutInteraction{
+public class SecondActivity extends AppCompatActivity implements AuthManager.ISignOutInteraction{
 
-    private FacebookManager mFacebookManager;
+    private AuthManager mAuthManager;
     private TextView tvEmail;
 
     @Override
@@ -17,14 +17,14 @@ public class SecondActivity extends AppCompatActivity implements FacebookManager
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_second);
 
-        mFacebookManager = FacebookManager.getInstance(this);
+        mAuthManager = AuthManager.getInstance(this);
 
         tvEmail = findViewById(R.id.tvEmail);
-        tvEmail.setText(mFacebookManager.getUser().getEmail());
+        tvEmail.setText(mAuthManager.getUser().getEmail());
     }
 
     public void onSignOut(View view) {
-        mFacebookManager.signOut();
+        mAuthManager.signOut();
     }
 
     @Override

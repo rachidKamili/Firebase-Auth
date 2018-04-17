@@ -29,12 +29,12 @@ public class FacebookManager {
     private static FacebookManager instance;
     private CallbackManager mCallbackManager;
     private LoginManager mLoginManager;
-    private ILoginInteraction loginListener;
-    private ISignOutInteraction signOutListener;
+    private AuthManager.ILoginInteraction loginListener;
+    private AuthManager.ISignOutInteraction signOutListener;
     private Activity mActivity;
     private FirebaseAuth mAuth;
 
-    public FacebookManager() {
+    private FacebookManager() {
 
     }
 
@@ -53,12 +53,11 @@ public class FacebookManager {
     }
 
     private void attach(Object object) {
-
-        if (object instanceof ILoginInteraction) {
-            this.loginListener = (ILoginInteraction) object;
+        if (object instanceof AuthManager.ILoginInteraction) {
+            this.loginListener = (AuthManager.ILoginInteraction) object;
         }
-        if (object instanceof ISignOutInteraction) {
-            this.signOutListener = (ISignOutInteraction) object;
+        if (object instanceof AuthManager.ISignOutInteraction) {
+            this.signOutListener = (AuthManager.ISignOutInteraction) object;
         }
         if (object instanceof Activity) {
             this.mActivity = (Activity) object;
@@ -81,13 +80,11 @@ public class FacebookManager {
             @Override
             public void onCancel() {
                 Log.d(TAG, "facebook:onCancel");
-                // ...
             }
 
             @Override
             public void onError(FacebookException error) {
                 Log.d(TAG, "facebook:onError", error);
-                // ...
             }
         });
     }
@@ -100,13 +97,9 @@ public class FacebookManager {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
-                            Log.d(TAG, "signInWithCredential:success");
                             FirebaseUser user = mAuth.getCurrentUser();
                             loginListener.onLoginSuccess(user);
                         } else {
-                            // If sign in fails, display a message to the user.
-                            Log.w(TAG, "signInWithCredential:failure", task.getException());
                             Toast.makeText(mActivity, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
                             loginListener.onLoginError(task.getException().getMessage());
@@ -115,22 +108,7 @@ public class FacebookManager {
                 });
     }
 
-    public FirebaseUser getUser() {
-        return mAuth.getCurrentUser();
-    }
-
     public void signOut() {
-        mAuth.signOut();
         mLoginManager.logOut();
-        signOutListener.onSignOut(getUser() == null);
-    }
-
-    public interface ILoginInteraction {
-        void onLoginSuccess(FirebaseUser user);
-        void onLoginError(String error);
-    }
-
-    public interface ISignOutInteraction {
-        void onSignOut(boolean isSignedOut);
     }
 }

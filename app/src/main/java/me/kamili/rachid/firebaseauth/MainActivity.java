@@ -8,34 +8,34 @@ import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseUser;
 
-import me.kamili.rachid.firebaseauth.utils.FacebookManager;
+import me.kamili.rachid.firebaseauth.utils.AuthManager;
 
-public class MainActivity extends AppCompatActivity implements FacebookManager.ILoginInteraction {
+public class MainActivity extends AppCompatActivity implements AuthManager.ILoginInteraction {
 
-    private FacebookManager mFacebookManager;
+    private AuthManager mAuthManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mFacebookManager = FacebookManager.getInstance(this);
+        mAuthManager = AuthManager.getInstance(this);
+
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        // Pass the activity result back to the Facebook SDK
-        mFacebookManager.onActivityResult(requestCode, resultCode, data);
+        mAuthManager.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override
     public void onStart() {
         super.onStart();
 
-        mFacebookManager = FacebookManager.getInstance(this);
-        if (mFacebookManager.getUser() != null) {
+        mAuthManager = AuthManager.getInstance(this);
+        if (mAuthManager.getUser() != null) {
             startSecondActivity();
         }
     }
@@ -46,7 +46,11 @@ public class MainActivity extends AppCompatActivity implements FacebookManager.I
     }
 
     public void loginFacebook(View view) {
-        mFacebookManager.signIn();
+        mAuthManager.signInWithFacebook();
+    }
+
+    public void loginGoogle(View view) {
+        mAuthManager.signInWithGoogle();
     }
 
     @Override

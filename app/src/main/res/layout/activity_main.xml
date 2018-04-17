@@ -15,6 +15,11 @@
         android:layout_height="wrap_content"
         android:onClick="loginFacebook"/>
 
-
+    <Button
+        android:id="@+id/btnGoogle"
+        android:text="Log in with Google"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="loginGoogle"/>
 
 </LinearLayout>
